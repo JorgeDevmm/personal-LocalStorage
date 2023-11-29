@@ -13,9 +13,6 @@ function eventListeners() {
 
   // Cunao el documento esta listo
   document.addEventListener('DOMContentLoaded', leerPublicaciones);
-
-  // cuando elimino el mensaje
-  listaPublicaciones.addEventListener('click', eliminarMensaje);
 }
 
 //TODO Funciones
@@ -92,19 +89,24 @@ function crearHtml() {
   if (publicaciones.length > 0) {
     // recorrer el arreglo de publicaciones, y crear elemento html y mostrarlo en la lista
     publicaciones.forEach((objMensaje) => {
+      // html para publicación
       const mensaje = document.createElement('P');
-      const borrar = document.createElement('span');
       mensaje.textContent = objMensaje.publicacion;
       mensaje.classList.add('p-05', 'font-w-b', 'color-white', 'font-border');
       mensaje.style.backgroundColor = objMensaje.color;
 
-      // establezco clases y atributos para boton borrar
+      // html para el boton borrar dentro de la publicación
+      const borrar = document.createElement('span');
       borrar.textContent = 'X';
       borrar.classList.add('borrar-publicacion');
       borrar.setAttribute('data-id', objMensaje.id);
 
-      listaPublicaciones.appendChild(mensaje);
+      // cuando elimino el mensaje
+      borrar.addEventListener('click', eliminarMensaje);
+
+      // agregar htl publicacion y borrar al contenedor respectivo
       mensaje.appendChild(borrar);
+      listaPublicaciones.appendChild(mensaje);
     });
   }
 
