@@ -506,6 +506,12 @@ form {
 .background-black {
   background-color: #000000;
 }
+.background-white {
+  background-color: #d7dbdc;
+}
+.text-center {
+  text-align: center;
+}
 .color-white {
   color: #e7e9ea;
 }
