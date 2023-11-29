@@ -506,6 +506,9 @@ form {
 .background-black {
   background-color: #000000;
 }
+.background-gris {
+  background-color: #9aa6a6;
+}
 .background-white {
   background-color: #d7dbdc;
 }
@@ -524,6 +527,14 @@ form {
 }
 .u-pull-left {
   float: left;
+}
+
+.p-05 {
+  padding: 0.5rem;
+}
+
+.font-w {
+  font-weight: bold;
 }
 
 /* Misc
