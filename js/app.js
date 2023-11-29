@@ -28,7 +28,9 @@ function agregarPublicacion(e) {
   e.preventDefault();
 
   // TextArea donde el usuario escribe
-  const publicacion = document.querySelector('#publicacion').value;
+  const publicacion = document
+    .querySelector('#publicacion')
+    .value.toUpperCase();
 
   // Validación de uqe no se puede entrar un dato vacio
   if (publicacion === '') {
