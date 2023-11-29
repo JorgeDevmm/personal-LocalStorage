@@ -266,6 +266,7 @@ h6 {
 
 p {
   margin-top: 0;
+  font-size: 2rem;
 }
 
 /* Links
@@ -533,8 +534,13 @@ form {
   padding: 0.5rem;
 }
 
-.font-w {
+.font-w-b {
   font-weight: bold;
+}
+
+.font-border {
+  -webkit-text-stroke: 1px #000;
+  text-stroke: 1px #000;
 }
 
 /* Misc

@@ -1,40 +1,54 @@
 //TODO variables
 const formulario = document.querySelector('#formulario');
-const listaTweets = document.querySelector('#lista-tweets');
+const listaPublicaciones = document.querySelector('#lista-publicaciones');
 const contenido = document.querySelector('#contenido');
-let tweets = [];
+let publicaciones = [];
 
 //TODO Eventos Listeners
 eventListeners();
 
 function eventListeners() {
-  formulario.addEventListener('submit', agregarTweet);
-  listaTweets.addEventListener('click', eliminarMensaje);
+  // cuando el usuario agrega un nuevo
+  formulario.addEventListener('submit', agregarPublicacion);
+
+  // Cunao el documento esta listo
+  document.addEventListener('DOMContentLoaded', leerPublicaciones);
+
+  // cuando elimino el mensaje
+  listaPublicaciones.addEventListener('click', eliminarMensaje);
 }
 
 //TODO Funciones
 
-function agregarTweet(e) {
+function leerPublicaciones() {
+  // extraigo el string de localstorage y transformo a array, o devuelve un array vacio
+  publicaciones = JSON.parse(localStorage.getItem('publicaciones')) || [];
+
+  crearHtml();
+}
+
+function agregarPublicacion(e) {
   e.preventDefault();
 
   // TextArea donde el usuario escribe
-  const tweet = document.querySelector('#tweet').value;
+  const publicacion = document.querySelector('#publicacion').value;
 
   // Validación de uqe no se puede entrar un dato vacio
-  if (tweet === '') {
+  if (publicacion === '') {
     mostrarError('Un mensaje no puede ingresar vacío');
 
     return; //evita que se ejecuten más lineas de código
   }
 
   // para evitar duplicidad agregamos como objeto commo Date.now como id
-  const tweetObj = {
+  const publicacionObj = {
     id: Date.now(),
-    tweet,
+    publicacion,
+    color: generarColorAleatorio(),
   };
 
-  // Añadiendo al arreglo de tweets
-  tweets = [...tweets, tweetObj];
+  // Añadiendo al arreglo de publicaciones
+  publicaciones = [...publicaciones, publicacionObj];
 
   // Crear Html
   crearHtml();
@@ -48,16 +62,16 @@ function mostrarError(error) {
   limpiarAlertaFinal(contenido);
 
   // Crear Elemento de error
-  const mensajeError = document.createElement('P');
-  mensajeError.textContent = error;
-  mensajeError.classList.add('error');
+  const publicacionError = document.createElement('P');
+  publicacionError.textContent = error;
+  publicacionError.classList.add('error');
 
   // Insertar en el Contenido
-  contenido.appendChild(mensajeError);
+  contenido.appendChild(publicacionError);
 
   //Eliminar mensaje en tres segundos
   setTimeout(() => {
-    mensajeError.remove();
+    publicacionError.remove();
   }, 3000);
 }
 
@@ -75,47 +89,69 @@ function crearHtml() {
   lipiarHtml();
 
   // validar elementos dentro del arreglo
-  if (tweets.length > 0) {
-    // recorrer el arreglo de tweets, y crear elemento html y mostrarlo en la lista
-    tweets.forEach((objMensaje) => {
+  if (publicaciones.length > 0) {
+    // recorrer el arreglo de publicaciones, y crear elemento html y mostrarlo en la lista
+    publicaciones.forEach((objMensaje) => {
       const mensaje = document.createElement('P');
       const borrar = document.createElement('span');
-      mensaje.textContent = objMensaje.tweet;
-      mensaje.classList.add('background-gris', 'p-05', 'font-w');
+      mensaje.textContent = objMensaje.publicacion;
+      mensaje.classList.add('p-05', 'font-w-b', 'color-white', 'font-border');
+      mensaje.style.backgroundColor = objMensaje.color;
 
       // establezco clases y atributos para boton borrar
       borrar.textContent = 'X';
-      borrar.classList.add('borrar-tweet');
+      borrar.classList.add('borrar-publicacion');
       borrar.setAttribute('data-id', objMensaje.id);
 
-      listaTweets.appendChild(mensaje);
+      listaPublicaciones.appendChild(mensaje);
       mensaje.appendChild(borrar);
     });
   }
 
-  console.log(tweets);
+  // guardar en el localstorage
+  sicronizarStorage();
 }
 
-// Eliminar los cursos de la listaTweets
+// Agrega las publicaciones actuales a LocalStorage
+function sicronizarStorage() {
+  localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
+}
+
+// Eliminar los cursos de la listaPublicaciones
 function lipiarHtml() {
   // si contenedor tiene al menos un elemento
-  while (listaTweets.firstChild) {
+  while (listaPublicaciones.firstChild) {
     // eliminar un hijo por el primero
-    listaTweets.removeChild(listaTweets.firstChild);
+    listaPublicaciones.removeChild(listaPublicaciones.firstChild);
   }
 }
 
 // ELiminar Mensaje
 function eliminarMensaje(e) {
   // verificamos si se encuentra la clase donde presionamos
-  if (e.target.classList.contains('borrar-tweet')) {
+  if (e.target.classList.contains('borrar-publicacion')) {
     // guardamos el id de mensaje a eliminar
     const mensajId = e.target.getAttribute('data-id');
 
     // guardamos en un nuevo array el los elementos diferente al id eliminado
-    tweets = tweets.filter((mensaje) => mensaje.id != mensajId);
+    publicaciones = publicaciones.filter((mensaje) => mensaje.id != mensajId);
 
     // volvemos a generar html
     crearHtml();
   }
+}
+
+// Generar color aleatorio
+function generarColorAleatorio() {
+  // Obtener valores aleatorios para rojo, verde y azul
+  const rojo = Math.floor(Math.random() * 256);
+  const verde = Math.floor(Math.random() * 256);
+  const azul = Math.floor(Math.random() * 256);
+
+  // Crear el color en formato hexadecimal, mediante toString que devuelve una cadena en base al argumento
+  const colorHex = `#${rojo.toString(16)}${verde.toString(16)}${azul.toString(
+    16
+  )}`;
+
+  return colorHex;
 }
